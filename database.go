@@ -62,6 +62,30 @@ func (d *Database) GetById(id uint) *Entry {
 	return entry
 }
 
+func (d *Database) GetUniqueProjects() []*ProjectCount {
+	projects := make([]*ProjectCount, 0)
+
+	for _, entry := range d.Entires {
+		foundProject := false
+		for _, recordedProject := range projects {
+			if entry.Name == recordedProject.Name {
+				recordedProject.Count += 1
+				foundProject = true
+				break
+			}
+		}
+		if foundProject {
+			continue
+		}
+		projects = append(projects, &ProjectCount{
+			Name:  entry.Name,
+			Count: 1,
+		})
+	}
+
+	return projects
+}
+
 func (d *Database) getEntryAndIndexById(id uint) (*Entry, uint, error) {
 	var idx uint
 	var entry *Entry

@@ -63,6 +63,22 @@ var commands = []Command{
 			return nil
 		},
 	},
+	{
+		Command:     "project",
+		Description: "displays a table of all of the unique projects",
+		Handler: func() error {
+			projectCount := database.GetUniqueProjects()
+			t := table.NewWriter()
+			header := table.Row{"Name", "Count"}
+			t.AppendHeader(header)
+			for _, project := range projectCount {
+				row := table.Row{project.Name, project.Count}
+				t.AppendRow(row)
+			}
+			fmt.Println(t.Render())
+			return nil
+		},
+	},
 }
 
 func HelpCmd() {
