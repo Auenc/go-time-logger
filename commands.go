@@ -7,6 +7,8 @@ import (
 	"os"
 	"strings"
 	"time"
+
+	"github.com/jedib0t/go-pretty/table"
 )
 
 type Command struct {
@@ -36,6 +38,28 @@ var commands = []Command{
 
 			database.Add(projectName, startTime, endTime)
 
+			return nil
+		},
+	},
+	{
+		Command:     "ls",
+		Description: "list all of the time entries",
+		Handler: func() error {
+			entries := database.GetAll()
+
+			t := table.NewWriter()
+			header := table.Row{"id", "project name", "date", "start", "end", "duration"}
+			t.AppendHeader(header)
+
+			for _, entry := range entries {
+				edate := entry.Start.Format("2006:01:02")
+				estart := entry.Start.Format("15:04")
+				eend := entry.End.Format("15:04")
+				dur := entry.End.Sub(entry.Start).Round(time.Second)
+				row := table.Row{entry.Id, entry.Name, edate, estart, eend, dur}
+				t.AppendRow(row)
+			}
+			fmt.Println(t.Render())
 			return nil
 		},
 	},

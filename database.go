@@ -27,8 +27,6 @@ func CreateDatabase(path string, data []byte) (*Database, error) {
 		return nil, fmt.Errorf("error parsing database %w", err)
 	}
 
-	fmt.Println("db path", db.databasePath)
-
 	return &db, nil
 }
 
