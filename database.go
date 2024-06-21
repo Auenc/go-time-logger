@@ -54,16 +54,32 @@ func (d *Database) Add(name string, start, end time.Time) (*Entry, error) {
 }
 
 func (d *Database) GetAll(filter EntryFilter) []*Entry {
-	if filter.ProjectName != "" {
-		var filtered []*Entry
-		for _, entry := range d.Entires {
-			if entry.Name == filter.ProjectName {
-				filtered = append(filtered, entry)
-			}
+	var filtered []*Entry
+	// if filter.ProjectName != "" {
+	// 	var filtered []*Entry
+	// 	for _, entry := range d.Entires {
+	// 		if entry.Name == filter.ProjectName {
+	// 			filtered = append(filtered, entry)
+	// 		}
+	// 	}
+	// 	return filtered
+	// }
+	sfProjectName := filter.ProjectName != ""
+	sfSpecificDate := filter.SpecificDate != ""
+	for _, entry := range d.Entires {
+		shouldAdd := true
+		if sfProjectName && entry.Name != filter.ProjectName {
+			shouldAdd = false
 		}
-		return filtered
+		edate := entry.Start.Format("2006:01:02")
+		if sfSpecificDate && edate != filter.SpecificDate {
+			shouldAdd = false
+		}
+		if shouldAdd {
+			filtered = append(filtered, entry)
+		}
 	}
-	return d.Entires
+	return filtered
 }
 
 func (d *Database) GetById(id uint) *Entry {

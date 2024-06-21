@@ -13,7 +13,8 @@ type Entry struct {
 }
 
 type EntryFilter struct {
-	ProjectName string
+	ProjectName  string
+	SpecificDate string
 }
 
 func validateEntry(toValidate Entry) error {

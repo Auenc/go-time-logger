@@ -20,22 +20,9 @@ func init() {
 }
 
 func main() {
-	var pname string
-	flag.StringVar(&pname, "project", "", "the project we would like to see entries for")
+	projectPtr := flag.String("project", "", "the project we would like to see entries for")
+	specificDate := flag.String("date", "", "the date we want to show entries for")
 	flag.Parse()
 
-	// // add some entries
-	// now := time.Now()
-	// then := now.Add(time.Hour)
-	// database.Add("Saving some files", now, then)
-
-	// entry, err := database.DeleteById(8)
-	// if err != nil {
-	// 	panic(err)
-	// }
-
-	// fmt.Printf("%s - you are the weakest entry, goodbyte\n", entry.Name)
-
-	// fmt.Println("we did it! Gwych!")
-	ProcessCommand(Flags{ProjectName: pname})
+	ProcessCommand(Flags{ProjectName: *projectPtr, SpecificDate: *specificDate})
 }

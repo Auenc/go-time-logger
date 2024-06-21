@@ -19,7 +19,8 @@ type Command struct {
 }
 
 type Flags struct {
-	ProjectName string
+	ProjectName  string
+	SpecificDate string
 }
 
 var commands = []Command{
@@ -54,6 +55,9 @@ var commands = []Command{
 			filter := EntryFilter{}
 			if flags.ProjectName != "" {
 				filter.ProjectName = flags.ProjectName
+			}
+			if flags.SpecificDate != "" {
+				filter.SpecificDate = flags.SpecificDate
 			}
 			entries := database.GetAll(filter)
 
