@@ -53,7 +53,16 @@ func (d *Database) Add(name string, start, end time.Time) (*Entry, error) {
 	return entry, nil
 }
 
-func (d *Database) GetAll() []*Entry {
+func (d *Database) GetAll(filter EntryFilter) []*Entry {
+	if filter.ProjectName != "" {
+		var filtered []*Entry
+		for _, entry := range d.Entires {
+			if entry.Name == filter.ProjectName {
+				filtered = append(filtered, entry)
+			}
+		}
+		return filtered
+	}
 	return d.Entires
 }
 

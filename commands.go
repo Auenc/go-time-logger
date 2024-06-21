@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"errors"
+	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -14,18 +15,22 @@ import (
 type Command struct {
 	Command     string
 	Description string
-	Handler     func() error
+	Handler     func(args []string, flags Flags) error
+}
+
+type Flags struct {
+	ProjectName string
 }
 
 var commands = []Command{
 	{
 		Command:     "start",
 		Description: "Start a timer for a project",
-		Handler: func() error {
-			if len(os.Args) < 3 {
+		Handler: func(args []string, flags Flags) error {
+			if len(args) < 3 {
 				return errors.New("project name is requried")
 			}
-			projectName := os.Args[2]
+			projectName := args[2]
 			startTime := time.Now()
 			scanner := bufio.NewScanner(os.Stdin)
 			fmt.Println("Enter q to quit")
@@ -44,8 +49,13 @@ var commands = []Command{
 	{
 		Command:     "ls",
 		Description: "list all of the time entries",
-		Handler: func() error {
-			entries := database.GetAll()
+		Handler: func(args []string, flags Flags) error {
+
+			filter := EntryFilter{}
+			if flags.ProjectName != "" {
+				filter.ProjectName = flags.ProjectName
+			}
+			entries := database.GetAll(filter)
 
 			t := table.NewWriter()
 			header := table.Row{"id", "project name", "date", "start", "end", "duration"}
@@ -66,7 +76,7 @@ var commands = []Command{
 	{
 		Command:     "project",
 		Description: "displays a table of all of the unique projects",
-		Handler: func() error {
+		Handler: func(args []string, flags Flags) error {
 			projectCount := database.GetUniqueProjects()
 			t := table.NewWriter()
 			header := table.Row{"Name", "Count"}
@@ -89,13 +99,14 @@ func HelpCmd() {
 	}
 }
 
-func ProcessCommand() {
-	if len(os.Args) < 2 {
+func ProcessCommand(flags Flags) {
+	args := flag.Args()
+	if len(args) < 1 {
 		HelpCmd()
 		return
 	}
-	cmdName := os.Args[1]
-
+	cmdName := args[0]
+	fmt.Println("cmdName", cmdName)
 	var cmd *Command
 	for _, c := range commands {
 		if c.Command == cmdName {
@@ -107,7 +118,7 @@ func ProcessCommand() {
 		HelpCmd()
 		return
 	}
-	err := cmd.Handler()
+	err := cmd.Handler(args, flags)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error running command: %s\n", err)
 	}

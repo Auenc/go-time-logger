@@ -12,6 +12,10 @@ type Entry struct {
 	End   time.Time `json:"end"`
 }
 
+type EntryFilter struct {
+	ProjectName string
+}
+
 func validateEntry(toValidate Entry) error {
 	if toValidate.Name == "" {
 		return errors.New("name must not be empty")

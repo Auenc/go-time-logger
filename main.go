@@ -1,5 +1,10 @@
 package main
 
+import (
+	"flag"
+	"fmt"
+)
+
 const databasePath = "./test.json"
 
 var database *Database
@@ -16,6 +21,11 @@ func init() {
 }
 
 func main() {
+	var pname string
+	flag.StringVar(&pname, "project", "", "the project we would like to see entries for")
+	flag.Parse()
+
+	fmt.Println("pNamePtr", pname)
 
 	// // add some entries
 	// now := time.Now()
@@ -30,5 +40,5 @@ func main() {
 	// fmt.Printf("%s - you are the weakest entry, goodbyte\n", entry.Name)
 
 	// fmt.Println("we did it! Gwych!")
-	ProcessCommand()
+	ProcessCommand(Flags{ProjectName: pname})
 }
