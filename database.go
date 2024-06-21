@@ -71,7 +71,7 @@ func (d *Database) GetAll(filter EntryFilter) []*Entry {
 		if sfProjectName && entry.Name != filter.ProjectName {
 			shouldAdd = false
 		}
-		edate := entry.Start.Format("2006:01:02")
+		edate := entry.Start.Format("2006-01-02")
 		if sfSpecificDate && edate != filter.SpecificDate {
 			shouldAdd = false
 		}

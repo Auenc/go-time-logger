@@ -68,7 +68,7 @@ var commands = []Command{
 			var totalDuration time.Duration
 
 			for _, entry := range entries {
-				edate := entry.Start.Format("2006:01:02")
+				edate := entry.Start.Format("2006-01-02")
 				estart := entry.Start.Format("15:04")
 				eend := entry.End.Format("15:04")
 				dur := entry.End.Sub(entry.Start).Round(time.Second)
