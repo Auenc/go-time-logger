@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 )
 
 const databasePath = "./test.json"
@@ -24,8 +23,6 @@ func main() {
 	var pname string
 	flag.StringVar(&pname, "project", "", "the project we would like to see entries for")
 	flag.Parse()
-
-	fmt.Println("pNamePtr", pname)
 
 	// // add some entries
 	// now := time.Now()

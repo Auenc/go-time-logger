@@ -27,10 +27,10 @@ var commands = []Command{
 		Command:     "start",
 		Description: "Start a timer for a project",
 		Handler: func(args []string, flags Flags) error {
-			if len(args) < 3 {
+			if len(args) < 2 {
 				return errors.New("project name is requried")
 			}
-			projectName := args[2]
+			projectName := args[1]
 			startTime := time.Now()
 			scanner := bufio.NewScanner(os.Stdin)
 			fmt.Println("Enter q to quit")
@@ -61,14 +61,19 @@ var commands = []Command{
 			header := table.Row{"id", "project name", "date", "start", "end", "duration"}
 			t.AppendHeader(header)
 
+			var totalDuration time.Duration
+
 			for _, entry := range entries {
 				edate := entry.Start.Format("2006:01:02")
 				estart := entry.Start.Format("15:04")
 				eend := entry.End.Format("15:04")
 				dur := entry.End.Sub(entry.Start).Round(time.Second)
+				totalDuration += dur
 				row := table.Row{entry.Id, entry.Name, edate, estart, eend, dur}
 				t.AppendRow(row)
 			}
+			footer := table.Row{"total", "", "", "", "", totalDuration}
+			t.AppendFooter(footer)
 			fmt.Println(t.Render())
 			return nil
 		},
@@ -106,7 +111,6 @@ func ProcessCommand(flags Flags) {
 		return
 	}
 	cmdName := args[0]
-	fmt.Println("cmdName", cmdName)
 	var cmd *Command
 	for _, c := range commands {
 		if c.Command == cmdName {
