@@ -47,6 +47,11 @@ func (d *Database) Add(name string, start, end time.Time) (*Entry, error) {
 
 	d.Entires = append(d.Entires, entry)
 
+	err = d.save()
+	if err != nil {
+		return nil, fmt.Errorf("error adding: %w", err)
+	}
+
 	return entry, nil
 }
 
@@ -81,6 +86,12 @@ func (d *Database) DeleteById(id uint) (*Entry, error) {
 		return nil, err
 	}
 	d.Entires = append(d.Entires[:idx], d.Entires[idx+1:]...)
+
+	err = d.save()
+	if err != nil {
+		return nil, fmt.Errorf("error deleting: %w", err)
+	}
+
 	return entry, nil
 }
 
@@ -97,10 +108,15 @@ func (d *Database) UpdateById(id uint, toUpdate Entry) (*Entry, error) {
 	entry.End = toUpdate.End
 	entry.Name = toUpdate.Name
 
+	err = d.save()
+	if err != nil {
+		return nil, fmt.Errorf("error updating: %w", err)
+	}
+
 	return entry, nil
 }
 
-func (d *Database) Save() error {
+func (d *Database) save() error {
 	data, err := json.Marshal(d)
 	if err != nil {
 		return fmt.Errorf("error marshalling database %w", err)
