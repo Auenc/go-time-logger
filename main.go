@@ -2,15 +2,21 @@ package main
 
 const databasePath = "./test.json"
 
+var database *Database
+
+func init() {
+	data, err := loadFileContents(databasePath)
+	if err != nil {
+		panic(err)
+	}
+	database, err = CreateDatabase(databasePath, data)
+	if err != nil {
+		panic(err)
+	}
+}
+
 func main() {
-	// data, err := loadFileContents(databasePath)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// database, err := CreateDatabase(databasePath, data)
-	// if err != nil {
-	// 	panic(err)
-	// }
+
 	// // add some entries
 	// now := time.Now()
 	// then := now.Add(time.Hour)

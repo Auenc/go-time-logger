@@ -1,9 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
 	"os"
+	"strings"
+	"time"
 )
 
 type Command struct {
@@ -21,7 +24,17 @@ var commands = []Command{
 				return errors.New("project name is requried")
 			}
 			projectName := os.Args[2]
-			fmt.Println("Hello, start!", projectName)
+			startTime := time.Now()
+			scanner := bufio.NewScanner(os.Stdin)
+			fmt.Println("Enter q to quit")
+			for scanner.Scan() {
+				if strings.Compare(scanner.Text(), "q") == 0 {
+					break
+				}
+			}
+			endTime := time.Now()
+
+			database.Add(projectName, startTime, endTime)
 
 			return nil
 		},
